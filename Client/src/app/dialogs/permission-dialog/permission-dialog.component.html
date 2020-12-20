@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content>
+    <mat-form-field class="permission-dialog-field">
+        <mat-label>Input permission name:</mat-label>
+        <input matInput [(ngModel)]="data.model.name">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="onApply()" [disabled]="!canApply" cdkFocusInitial>Apply</button>
+</div>
