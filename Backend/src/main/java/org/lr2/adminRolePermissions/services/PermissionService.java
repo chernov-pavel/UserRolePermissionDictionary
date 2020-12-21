@@ -11,9 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class PermissionService implements IPermissionService {
@@ -43,7 +42,7 @@ public class PermissionService implements IPermissionService {
 
     @Override
     public PermissionEntity add(String name) {
-        var permission = permissionRepository.save(new Permission(name));
+        var permission = permissionRepository.save(new Permission(name, Set.of()));
         return new PermissionEntity(permission);
     }
 

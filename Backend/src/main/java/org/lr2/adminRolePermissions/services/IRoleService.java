@@ -1,18 +1,20 @@
-//package org.lr2.adminRolePermissions.services;
-//
-//import org.lr2.adminRolePermissions.persitences.entities.Permission;
-//import org.lr2.adminRolePermissions.persitences.entities.Role;
-//
-//import java.util.List;
-//import java.util.UUID;
-//
-//public interface IRoleService {
-//    List<Role> getAll();
-//    Role getById(UUID id);
-//    Role add(String name, List<Permission> permissions);
-//    Role addPermissions(List<Permission> permissions);
-//    boolean isRoleNameUnique(String name);
-//    void removeAll();
-//    void removeById(UUID id);
-//    Role update(UUID id, Role role);
-//}
+package org.lr2.adminRolePermissions.services;
+
+import org.lr2.adminRolePermissions.domain.RoleEntity;
+import org.lr2.adminRolePermissions.domain.RoleInput;
+import org.lr2.adminRolePermissions.exceptions.BusinessLogicException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface IRoleService {
+    Page<RoleEntity> get(Pageable pageable);
+    RoleEntity getById(UUID id) throws BusinessLogicException;
+    RoleEntity add(String name, List<Integer> permissionIds);
+    RoleEntity addPermissionsToRole(UUID id, List<Integer> permissionIds);
+    boolean isRoleNameUnique(String name);
+    void removeById(UUID id);
+    RoleEntity update(UUID id, RoleInput input);
+}

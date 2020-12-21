@@ -1,7 +1,7 @@
 package org.lr2.adminRolePermissions.persitences.entities;
 
 import javax.persistence.*;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name="permissions")
@@ -13,11 +13,16 @@ public class Permission {
     @Column(nullable = false)
     private String name;
 
-    public Permission(String name) {
+    @ManyToMany(mappedBy = "permissions")
+    private Set<Role> roles;
+
+    public Permission(String name, Set<Role> roles) {
         this.name = name;
+        this.roles = roles;
     }
 
     public Permission() {
+        this.roles = Set.of();
     }
 
     public UUID getId() {
@@ -34,5 +39,13 @@ public class Permission {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

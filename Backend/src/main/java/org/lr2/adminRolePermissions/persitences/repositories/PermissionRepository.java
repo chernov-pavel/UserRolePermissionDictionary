@@ -11,5 +11,5 @@ import java.util.UUID;
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, UUID> {
     @Query("select case when count(p)> 0 then false else true end from Permission p where lower(p.name) = lower(:name)")
-    boolean permissionNameIsUnique(@Param("name") String model);
+    boolean permissionNameIsUnique(@Param("name") String name);
 }
