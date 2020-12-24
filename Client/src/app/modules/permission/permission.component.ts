@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
-import {PermissionBaseModel} from '../../shared/components/permission/permission-base.model';
+import {PermissionBase} from '../../shared/components/permission/permission.base.model';
 import {PermissionApiService} from '../../core/services/permission/permission.api.service';
-import {PageResponse} from '../../shared/models/permission-page.model';
+import {PageResponse} from '../../shared/models/page-response.model';
 import {MatDialog} from '@angular/material/dialog';
 import {PermissionDialogComponent} from '../../dialogs/permission-dialog/permission-dialog.component';
 import {MatTable} from '@angular/material/table';
-import {YesNoDialogComponent} from '../../shared/components/yes-no-dialog/yes-no-dialog.component';
+import {YesNoDialogComponent} from '../../dialogs/yes-no-dialog/yes-no-dialog.component';
 
 @Component({
   selector: 'app-permission',
@@ -15,7 +15,7 @@ import {YesNoDialogComponent} from '../../shared/components/yes-no-dialog/yes-no
 })
 export class PermissionComponent implements AfterViewInit {
     displayedColumns: string[] = ['Id', 'Permission', 'Actions'];
-    data: PermissionBaseModel[] = [];
+    data: PermissionBase[] = [];
 
     resultsLength = 0;
     isLoadingResults = true;
@@ -33,13 +33,13 @@ export class PermissionComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.isLoadingResults = true;
-        this.permissionApiService.getAll(
+        this.permissionApiService.get(
             {
                             page: this.paginator === undefined
                                 ? 0
                                 : this.paginator.pageIndex,
                             size: 30
-            }).subscribe((data: PageResponse<PermissionBaseModel>) => {
+            }).subscribe((data: PageResponse<PermissionBase>) => {
                 this.isLoadingResults = false;
                 this.isRateLimitReached = false;
                 this.resultsLength = data.totalElements;
@@ -56,13 +56,18 @@ export class PermissionComponent implements AfterViewInit {
         const dialogRef = this.dialog.open(PermissionDialogComponent, {
             width: '350px',
             data: {
-                model: { name: '', id: '' },
                 title: 'Create new permission'
             }
         });
-        dialogRef.afterClosed().subscribe((result: PermissionBaseModel) => {
-            this.data.push(result);
-            this.table.renderRows();
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
+                return false;
+            }
+            this.permissionApiService.create({ name: result.name })
+                .subscribe(o => {
+                    this.data.push(o);
+                    this.table.renderRows();
+            });
         });
     }
 
@@ -84,7 +89,7 @@ export class PermissionComponent implements AfterViewInit {
         });
     }
 
-    editPermission(permission: PermissionBaseModel) {
+    editPermission(permission: PermissionBase) {
         const dialogRef = this.dialog.open(PermissionDialogComponent, {
             width: '350px',
             data: {
@@ -92,9 +97,12 @@ export class PermissionComponent implements AfterViewInit {
                 title: 'Update permission'
             }
         });
-        dialogRef.afterClosed().subscribe((result: PermissionBaseModel) => {
-            this.permissionApiService.update(result)
-                .subscribe((item: PermissionBaseModel) => {
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
+                return;
+            }
+            this.permissionApiService.update(result.id, { name: result.name })
+                .subscribe((item: PermissionBase) => {
                     const index = this.data.findIndex((o) => o.id === permission.id)
                     this.data[index] = item;
                     this.table.renderRows();

@@ -1,5 +1,7 @@
 package org.lr2.adminRolePermissions.persitences.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -14,6 +16,7 @@ public class Permission {
     private String name;
 
     @ManyToMany(mappedBy = "permissions")
+    @JsonBackReference
     private Set<Role> roles;
 
     public Permission(String name, Set<Role> roles) {
@@ -22,7 +25,7 @@ public class Permission {
     }
 
     public Permission() {
-        this.roles = Set.of();
+        this.roles = new HashSet<Role>();
     }
 
     public UUID getId() {

@@ -1,6 +1,9 @@
 package org.lr2.adminRolePermissions.persitences.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,16 +22,16 @@ public class Role {
             name = "role_permission",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @JsonManagedReference
     private Set<Permission> permissions;
 
-    public Role(UUID id, String name, Set<Permission> permissions) {
-        this.id = id;
+    public Role(String name, Set<Permission> permissions) {
         this.name = name;
         this.permissions = permissions;
     }
 
     public Role() {
-        this.permissions = Set.of();
+        this.permissions = new HashSet<Permission>();
     }
 
     public UUID getId() {

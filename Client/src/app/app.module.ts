@@ -12,8 +12,12 @@ import {PermissionApiService} from './core/services/permission/permission.api.se
 import {PermissionService} from './core/services/permission/permission.service';
 import { HttpClientModule } from '@angular/common/http';
 import { PermissionDialogComponent } from './dialogs/permission-dialog/permission-dialog.component';
-import {FormsModule} from '@angular/forms';
-import { YesNoDialogComponent } from './shared/components/yes-no-dialog/yes-no-dialog.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { YesNoDialogComponent } from './dialogs/yes-no-dialog/yes-no-dialog.component';
+import { RoleDialogComponent } from './dialogs/role-dialog/role-dialog.component';
+import {RoleApiService} from './core/services/role/role.api.service';
+import {UserApiService} from './core/services/user/user.api.service';
+import { UserDialogComponent } from './dialogs/user-dialog/user-dialog.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +26,9 @@ import { YesNoDialogComponent } from './shared/components/yes-no-dialog/yes-no-d
     RoleComponent,
     PermissionComponent,
     PermissionDialogComponent,
-    YesNoDialogComponent
+    YesNoDialogComponent,
+    RoleDialogComponent,
+    UserDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -30,10 +36,13 @@ import { YesNoDialogComponent } from './shared/components/yes-no-dialog/yes-no-d
         BrowserAnimationsModule,
         MaterialModule,
         HttpClientModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule
     ],
   providers: [
       PermissionApiService,
+      RoleApiService,
+      UserApiService,
       PermissionService
   ],
   bootstrap: [AppComponent]

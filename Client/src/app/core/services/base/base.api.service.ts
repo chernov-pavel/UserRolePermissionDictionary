@@ -1,33 +1,42 @@
-import {BaseEndpointUrls} from '../../../shared/models/base-endpoint-urls.model';
-import {Observable, of} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {PageRequest} from '../../../shared/models/page-request';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {PageRequest} from '../../../shared/models/page-request.model';
 import {BaseModel} from '../../../shared/models/base-model.model';
 
-export abstract class BaseApiService<TModel extends BaseModel> {
+export abstract class BaseApiService<TBaseModel extends BaseModel, TPagedModel, TCreateModel, TUpdateModel> {
     protected apiUrl: string = "http://localhost:8080/api/";
     protected abstract controllerName: string;
-    protected abstract baseEndpointUrls: BaseEndpointUrls;
 
     protected constructor(protected httpClient: HttpClient) {
     }
 
-    getAll<PageResponse>(pageRequest: PageRequest): Observable<PageResponse> {
-        const url = `${this.apiUrl}${this.controllerName}${this.baseEndpointUrls.getAllEndpointName}?page=${pageRequest.page}&size=${pageRequest.size}`;
-        return this.httpClient.get<PageResponse>(url);
+    getAll(): Observable<TBaseModel[]> {
+        const url = `${this.apiUrl}${this.controllerName}`;
+        return this.httpClient.get<TBaseModel[]>(url);
     }
 
-    getById<TModel>(id: number): Observable<TModel> {
-        return of({} as TModel);
+    get(pageRequest: PageRequest): Observable<TPagedModel> {
+        const url = `${this.apiUrl}${this.controllerName}/paginated?page=${pageRequest.page}&size=${pageRequest.size}`;
+        return this.httpClient.get<TPagedModel>(url);
     }
 
-    add<TModel>(name: string): Observable<TModel> {
-        const url = `${this.apiUrl}${this.controllerName}${this.baseEndpointUrls.addEndpointName}`;
-        return this.httpClient.post<TModel>(url, { name: name });
+    getById(id: string): Observable<TBaseModel> {
+        const url = `${this.apiUrl}${this.controllerName}/${id}`;
+        return this.httpClient.get<TBaseModel>(url);
     }
 
-    deleteById<TModel>(id: string): Observable<any> {
-        const url = `${this.apiUrl}${this.controllerName}${this.baseEndpointUrls.deleteByIdEndpointName}/${id}`;
+    create(createModel: TCreateModel): Observable<TBaseModel> {
+        const url = `${this.apiUrl}${this.controllerName}/create`;
+        return this.httpClient.post<TBaseModel>(url, createModel);
+    }
+
+    deleteById(id: string): Observable<any> {
+        const url = `${this.apiUrl}${this.controllerName}/${id}/delete`;
         return this.httpClient.delete(url);
+    }
+
+    update(id: string, newModel: TUpdateModel): Observable<TBaseModel> {
+        const url = `${this.apiUrl}${this.controllerName}/${id}/update`;
+        return this.httpClient.put<TBaseModel>(url, newModel);
     }
 }

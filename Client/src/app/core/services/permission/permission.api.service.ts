@@ -1,27 +1,22 @@
 import { Injectable } from '@angular/core';
-import {PermissionBaseModel} from '../../../shared/components/permission/permission-base.model';
+import {PermissionBase} from '../../../shared/components/permission/permission.base.model';
 import {BaseApiService} from '../base/base.api.service';
-import {BaseEndpointUrls} from '../../../shared/models/base-endpoint-urls.model';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {PermissionUpdateInput} from '../../../shared/components/permission/permission-update.input';
+import {PageResponse} from '../../../shared/models/page-response.model';
+import {PermissionCreateInput} from '../../../shared/components/permission/permission-create-input.model';
 
 @Injectable()
-export class PermissionApiService extends BaseApiService<PermissionBaseModel>{
-    protected controllerName: string = "permissions";
-    protected baseEndpointUrls: BaseEndpointUrls = {
-        getAllEndpointName: '',
-        getByIdEndpointName: '/{id}',
-        addEndpointName: '/add',
-        deleteByIdEndpointName: '/',
-        updateEndpointName: '/{id}/update'
-    };
+export class PermissionApiService extends BaseApiService<PermissionBase, PageResponse<PermissionBase>, PermissionCreateInput, PermissionUpdateInput>{
+    protected controllerName: string = 'permissions';
 
     constructor(httpClient: HttpClient) {
         super(httpClient);
     }
 
-    update(newModel: PermissionBaseModel): Observable<PermissionBaseModel> {
-        const url = `${this.apiUrl}${this.controllerName}/${newModel.id}/update`;
-        return this.httpClient.put<PermissionBaseModel>(url,{ name: newModel.name });
+    checkPermissionName(permissionName: string): Observable<boolean> {
+        const url = `${this.apiUrl}${this.controllerName}/checkname?permissionName=${permissionName}`;
+        return this.httpClient.get<boolean>(url);
     }
 }

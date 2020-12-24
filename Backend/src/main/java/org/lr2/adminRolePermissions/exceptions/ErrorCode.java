@@ -3,5 +3,7 @@ package org.lr2.adminRolePermissions.exceptions;
 public enum ErrorCode {
     PermissionNameNotUnique,
     PermissionNotExists,
-    RoleNotExists
+    RoleNotExists,
+    RoleNameNotUnique,
+    UserNotExists
 }

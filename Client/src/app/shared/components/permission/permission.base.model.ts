@@ -1,5 +1,5 @@
 import {BaseModel} from '../../models/base-model.model';
 
-export interface PermissionBaseModel extends BaseModel{
+export interface PermissionBase extends BaseModel{
     name: string;
 }

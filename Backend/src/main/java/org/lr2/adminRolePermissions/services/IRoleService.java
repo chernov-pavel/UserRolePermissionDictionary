@@ -12,9 +12,10 @@ import java.util.UUID;
 public interface IRoleService {
     Page<RoleEntity> get(Pageable pageable);
     RoleEntity getById(UUID id) throws BusinessLogicException;
-    RoleEntity add(String name, List<Integer> permissionIds);
-    RoleEntity addPermissionsToRole(UUID id, List<Integer> permissionIds);
+    RoleEntity add(RoleInput input);
+    RoleEntity addPermissionsToRole(UUID id, List<UUID> permissionIds);
     boolean isRoleNameUnique(String name);
     void removeById(UUID id);
     RoleEntity update(UUID id, RoleInput input);
+    List<RoleEntity> getAll();
 }

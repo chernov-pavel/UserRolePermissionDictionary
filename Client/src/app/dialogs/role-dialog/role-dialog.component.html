@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+<div mat-dialog-content>
+    <mat-form-field class="permission-dialog-field">
+        <mat-label>Input permission name:</mat-label>
+        <input matInput [(ngModel)]="dialogData.name">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Select permissions:</mat-label>
+        <mat-select [formControl]="selectedPermissions" multiple>
+            <mat-option *ngFor="let permission of permissionList" [value]="permission.id">{{permission.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="onApply()" [disabled]="!canApply" cdkFocusInitial>Apply</button>
+</div>

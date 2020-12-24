@@ -1,12 +1,13 @@
 package org.lr2.adminRolePermissions.domain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class RoleInput {
     private String name;
-    private List<Integer> permissionIds;
+    private List<UUID> permissionIds;
 
-    public RoleInput(String name, List<Integer> permissionIds) {
+    public RoleInput(String name, List<UUID> permissionIds) {
         this.name = name;
         this.permissionIds = permissionIds;
     }
@@ -19,11 +20,11 @@ public class RoleInput {
         this.name = name;
     }
 
-    public List<Integer> getPermissionIds() {
+    public List<UUID> getPermissionIds() {
         return permissionIds;
     }
 
-    public void setPermissionIds(List<Integer> permissionIds) {
+    public void setPermissionIds(List<UUID> permissionIds) {
         this.permissionIds = permissionIds;
     }
 

@@ -14,4 +14,82 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet  id="2"  author="chernov">
+        <createTable tableName="roles">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet  id="3"  author="chernov">
+        <createTable tableName="role_permission">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="role_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permission_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint  baseColumnNames="role_id"
+                                  baseTableName="role_permission"
+                                  baseTableSchemaName="public"
+                                  constraintName="fk_role_permission_role"
+                                  onDelete="CASCADE"
+                                  onUpdate="RESTRICT"
+                                  referencedColumnNames="id"
+                                  referencedTableName="roles"
+                                  referencedTableSchemaName="public"/>
+        <addForeignKeyConstraint  baseColumnNames="permission_id"
+                                  baseTableName="role_permission"
+                                  baseTableSchemaName="public"
+                                  constraintName="fk_role_permission_permission"
+                                  onDelete="CASCADE"
+                                  onUpdate="RESTRICT"
+                                  referencedColumnNames="id"
+                                  referencedTableName="permissions"
+                                  referencedTableSchemaName="public"/>
+    </changeSet>
+
+    <changeSet  id="4"  author="chernov">
+        <createTable tableName="users">
+            <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="firstname" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastname" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="uuid">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint  baseColumnNames="role_id"
+                                  baseTableName="users"
+                                  baseTableSchemaName="public"
+                                  constraintName="fk_user_role"
+                                  onDelete="CASCADE"
+                                  onUpdate="RESTRICT"
+                                  referencedColumnNames="id"
+                                  referencedTableName="roles"
+                                  referencedTableSchemaName="public"/>
+    </changeSet>
 </databaseChangeLog>

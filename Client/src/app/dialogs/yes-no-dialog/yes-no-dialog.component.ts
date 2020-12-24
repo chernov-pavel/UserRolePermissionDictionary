@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ConfirmDialogModel} from '../../models/confirm-dialog.model';
+import {ConfirmDialogModel} from '../../shared/models/confirm-dialog.model';
 
 @Component({
   selector: 'app-yes-no-dialog',
