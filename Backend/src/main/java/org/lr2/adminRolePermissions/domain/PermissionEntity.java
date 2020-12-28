@@ -18,6 +18,8 @@ public class PermissionEntity {
         this.name = permission.getName();
     }
 
+    public PermissionEntity() {}
+
     public UUID getId() {
         return id;
     }

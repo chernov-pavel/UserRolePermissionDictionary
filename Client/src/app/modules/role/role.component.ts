@@ -8,21 +8,17 @@ import {YesNoDialogComponent} from '../../dialogs/yes-no-dialog/yes-no-dialog.co
 import {RoleBase} from '../../shared/components/role/role-base.model';
 import {RoleApiService} from '../../core/services/role/role.api.service';
 import {RoleDialogComponent} from '../../dialogs/role-dialog/role-dialog.component';
-import {RoleCreateInput} from '../../shared/components/role/role-create-input.model';
-import {RoleUpdateInput} from '../../shared/components/role/role-update-input.model';
 
 @Component({
   selector: 'app-role',
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.scss']
 })
-export class RoleComponent implements AfterViewInit {
+export class RoleComponent implements OnInit {
     displayedColumns: string[] = ['Id', 'Role', 'Permissions', 'Actions'];
     data: RoleBase[] = [];
 
     resultsLength = 0;
-    isLoadingResults = true;
-    isRateLimitReached = false;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatTable,{static:true}) table: MatTable<any>;
@@ -34,8 +30,7 @@ export class RoleComponent implements AfterViewInit {
     constructor(private roleApiService: RoleApiService, public dialog: MatDialog) {
     }
 
-    ngAfterViewInit() {
-        this.isLoadingResults = true;
+    ngOnInit(): void {
         this.roleApiService.get(
             {
                 page: this.paginator === undefined
@@ -43,14 +38,10 @@ export class RoleComponent implements AfterViewInit {
                     : this.paginator.pageIndex,
                 size: 30
             }).subscribe((data: PageResponse<RoleBase>) => {
-            this.isLoadingResults = false;
-            this.isRateLimitReached = false;
             this.resultsLength = data.totalElements;
 
             this.data = data.content;
         }, () => {
-            this.isLoadingResults = false;
-            this.isRateLimitReached = true;
             this.data = [];
         });
     }
@@ -62,33 +53,39 @@ export class RoleComponent implements AfterViewInit {
                 title: 'Create new role'
             }
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (!result) {
-                return false;
-            }
-            this.roleApiService.create({ name: result.name, permissionIds: result.permissions })
-                .subscribe(o => {
+        dialogRef.afterClosed()
+            .subscribe((result) => {
+                if (!result) {
+                    return false;
+                }
+                this.roleApiService.create({
+                    name: result.name,
+                    permissionIds: result.permissions
+                }).subscribe(o => {
                     this.data.push(o);
                     this.table.renderRows();
                 });
-        });
+            });
     }
 
     delete(id: string) {
         const dialogRef = this.dialog.open(YesNoDialogComponent, {
             maxWidth: "400px",
-            data: { title: 'Delete permission', message: 'Do you want to delete this permission?' }
-        });
+            data: {
+                title: 'Delete permission',
+                message: 'Do you want to delete this role?'
+            }});
 
-        dialogRef.afterClosed().subscribe(dialogResult => {
-            if (dialogResult) {
-                this.roleApiService.deleteById(id)
-                    .subscribe(() => {
-                        const index = this.data.findIndex((o) => o.id === id)
-                        this.data.splice(index, 1);
-                        this.table.renderRows();
-                    })
-            }
+        dialogRef.afterClosed()
+            .subscribe(dialogResult => {
+                if (dialogResult) {
+                    this.roleApiService.deleteById(id)
+                        .subscribe(() => {
+                            const index = this.data.findIndex((o) => o.id === id);
+                            this.data.splice(index, 1);
+                            this.table.renderRows();
+                        });
+                }
         });
     }
 
@@ -97,16 +94,20 @@ export class RoleComponent implements AfterViewInit {
             width: '350px',
             data: {
                 model: permission,
-                title: 'Update permission'
+                title: 'Update role'
             }
         });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (!result) {
-                return;
-            }
-            this.roleApiService.update(result.id, { name: result.name, permissionIds: result.permissions })
-                .subscribe((item: RoleBase) => {
-                    const index = this.data.findIndex((o) => o.id === permission.id)
+        dialogRef.afterClosed()
+            .subscribe((result) => {
+                if (!result) {
+                    return;
+                }
+                this.roleApiService.update(result.id,
+                    {
+                        name: result.name,
+                        permissionIds: result.permissions
+                    }).subscribe((item: RoleBase) => {
+                    const index = this.data.findIndex((o) => o.id === permission.id);
                     this.data[index] = item;
                     this.table.renderRows();
                 });

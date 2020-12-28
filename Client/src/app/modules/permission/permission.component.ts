@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {PermissionBase} from '../../shared/components/permission/permission.base.model';
 import {PermissionApiService} from '../../core/services/permission/permission.api.service';
@@ -13,13 +13,11 @@ import {YesNoDialogComponent} from '../../dialogs/yes-no-dialog/yes-no-dialog.co
   templateUrl: './permission.component.html',
   styleUrls: ['./permission.component.scss']
 })
-export class PermissionComponent implements AfterViewInit {
+export class PermissionComponent implements OnInit {
     displayedColumns: string[] = ['Id', 'Permission', 'Actions'];
     data: PermissionBase[] = [];
 
     resultsLength = 0;
-    isLoadingResults = true;
-    isRateLimitReached = false;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatTable,{static:true}) table: MatTable<any>;
@@ -31,25 +29,20 @@ export class PermissionComponent implements AfterViewInit {
     constructor(private permissionApiService: PermissionApiService, public dialog: MatDialog) {
     }
 
-    ngAfterViewInit() {
-        this.isLoadingResults = true;
+    ngOnInit(): void {
         this.permissionApiService.get(
             {
-                            page: this.paginator === undefined
-                                ? 0
-                                : this.paginator.pageIndex,
-                            size: 30
+                page: this.paginator === undefined
+                    ? 0
+                    : this.paginator.pageIndex,
+                size: 30
             }).subscribe((data: PageResponse<PermissionBase>) => {
-                this.isLoadingResults = false;
-                this.isRateLimitReached = false;
-                this.resultsLength = data.totalElements;
+            this.resultsLength = data.totalElements;
 
-                this.data = data.content;
-            }, () => {
-                this.isLoadingResults = false;
-                this.isRateLimitReached = true;
-                this.data = [];
-            });
+            this.data = data.content;
+        }, () => {
+            this.data = [];
+        });
     }
 
     addPermission() {

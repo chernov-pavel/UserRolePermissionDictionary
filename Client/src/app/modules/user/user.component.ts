@@ -17,13 +17,11 @@ import {UserDialogComponent} from '../../dialogs/user-dialog/user-dialog.compone
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })
-export class UserComponent implements AfterViewInit {
+export class UserComponent implements OnInit {
     displayedColumns: string[] = ['Id', 'Username', 'Password', 'Firstname', 'Lastname', 'Email', 'Role', 'Actions'];
     data: UserBase[] = [];
 
     resultsLength = 0;
-    isLoadingResults = true;
-    isRateLimitReached = false;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatTable,{static:true}) table: MatTable<any>;
@@ -35,8 +33,7 @@ export class UserComponent implements AfterViewInit {
     constructor(private userApiService: UserApiService, public dialog: MatDialog) {
     }
 
-    ngAfterViewInit() {
-        this.isLoadingResults = true;
+    ngOnInit(): void {
         this.userApiService.get(
             {
                 page: this.paginator === undefined
@@ -44,14 +41,10 @@ export class UserComponent implements AfterViewInit {
                     : this.paginator.pageIndex,
                 size: 30
             }).subscribe((data: PageResponse<UserBase>) => {
-            this.isLoadingResults = false;
-            this.isRateLimitReached = false;
             this.resultsLength = data.totalElements;
 
             this.data = data.content;
         }, () => {
-            this.isLoadingResults = false;
-            this.isRateLimitReached = true;
             this.data = [];
         });
     }
@@ -60,7 +53,7 @@ export class UserComponent implements AfterViewInit {
         const dialogRef = this.dialog.open(UserDialogComponent, {
             width: '350px',
             data: {
-                title: 'Create new role'
+                title: 'Create new user'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -78,7 +71,7 @@ export class UserComponent implements AfterViewInit {
     delete(id: string) {
         const dialogRef = this.dialog.open(YesNoDialogComponent, {
             maxWidth: "400px",
-            data: { title: 'Delete permission', message: 'Do you want to delete this permission?' }
+            data: { title: 'Delete user', message: 'Do you want to delete this user?' }
         });
 
         dialogRef.afterClosed().subscribe(dialogResult => {
@@ -98,7 +91,7 @@ export class UserComponent implements AfterViewInit {
             width: '350px',
             data: {
                 model: user,
-                title: 'Update permission'
+                title: 'Update user'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {

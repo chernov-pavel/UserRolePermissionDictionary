@@ -53,19 +53,12 @@ public class RoleController {
         return new RoleDto(result);
     }
 
-    @GetMapping("/{id}/addpermissions")
-    public RoleDto addPermissionsToRole(@PathVariable UUID id, @RequestBody List<UUID> permissionIds) {
-        var result = roleService.addPermissionsToRole(id, permissionIds);
-
-        return new RoleDto(result);
-    }
-
     @GetMapping("/checkname")
     public boolean isRoleNameUnique(@RequestParam String name) {
         return roleService.isRoleNameUnique(name);
     }
 
-    @DeleteMapping("/{id/delete}")
+    @DeleteMapping("/{id}/delete")
     public void removeById(@PathVariable UUID id) {
         roleService.removeById(id);
     }

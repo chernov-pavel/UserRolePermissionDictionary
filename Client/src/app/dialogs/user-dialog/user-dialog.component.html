@@ -1,38 +1,73 @@
-<h1 mat-dialog-title>{{ title }}</h1>
+<h1 id="createUserDialogTitleHeader" mat-dialog-title>{{ title }}</h1>
 <div mat-dialog-content>
-    <mat-form-field class="permission-dialog-field">
-        <mat-label>Input user name:</mat-label>
-        <input matInput [(ngModel)]="dialogData.username">
-    </mat-form-field>
+    <form [formGroup]="userDialogFormGroup">
+        <mat-form-field class="user-dialog-field">
+            <mat-label>Input user name:</mat-label>
+            <input type="text"
+                   matInput
+                   formControlName="username"
+                   placeholder="Input user name"/>
+            <mat-error *ngIf="userDialogFormGroup.get('username').hasError('required')">
+                User name is <strong>required.</strong>
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field class="permission-dialog-field">
-        <mat-label>Input password:</mat-label>
-        <input matInput [(ngModel)]="dialogData.password">
-    </mat-form-field>
+        <mat-form-field class="user-dialog-field">
+            <mat-label>Input password:</mat-label>
+            <input type="password"
+                   matInput
+                   formControlName="password"
+                   placeholder="Input password"/>
+            <mat-error *ngIf="userDialogFormGroup.get('password').hasError('required')">
+                Password is <strong>required.</strong>
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field class="permission-dialog-field">
-        <mat-label>Input first name:</mat-label>
-        <input matInput [(ngModel)]="dialogData.firstname">
-    </mat-form-field>
+        <mat-form-field class="user-dialog-field">
+            <mat-label>Input first name:</mat-label>
+            <input type="text"
+                   matInput
+                   formControlName="firstname"
+                   placeholder="Input first name"/>
+            <mat-error *ngIf="userDialogFormGroup.get('firstname').hasError('required')">
+                First name is <strong>required.</strong>
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field class="permission-dialog-field">
-        <mat-label>Input last name:</mat-label>
-        <input matInput [(ngModel)]="dialogData.lastname">
-    </mat-form-field>
+        <mat-form-field class="user-dialog-field">
+            <mat-label>Input last name:</mat-label>
+            <input type="text"
+                   matInput
+                   formControlName="lastname"
+                   placeholder="Input last name"/>
+            <mat-error *ngIf="userDialogFormGroup.get('lastname').hasError('required')">
+                Last name is <strong>required.</strong>
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field class="permission-dialog-field">
-        <mat-label>Input email name:</mat-label>
-        <input matInput [(ngModel)]="dialogData.email">
-    </mat-form-field>
+        <mat-form-field class="user-dialog-field">
+            <mat-label>Input email name:</mat-label>
+            <input type="text"
+                   matInput
+                   formControlName="email"
+                   placeholder="Input email"/>
+            <mat-error *ngIf="userDialogFormGroup.get('email').hasError('required')">
+                Email is <strong>required.</strong>
+            </mat-error>
+            <mat-error *ngIf="!userDialogFormGroup.get('email').hasError('required') && userDialogFormGroup.get('email').hasError('email')">
+                Email is invalid
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Select an option</mat-label>
-        <mat-select [(value)]="dialogData.role">
-            <mat-option *ngFor="let role of roleList" [value]="role.id">{{role.name}}</mat-option>
-        </mat-select>
-    </mat-form-field>
+        <mat-form-field class="user-dialog-field" appearance="fill">
+            <mat-label>Select an option</mat-label>
+            <mat-select formControlName="selectedRole">
+                <mat-option *ngFor="let role of roleList" [value]="role.id">{{role.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button id="cancelBtn" (click)="onCancel()">Cancel</button>
     <button mat-button (click)="onApply()" [disabled]="!canApply" cdkFocusInitial>Apply</button>
 </div>

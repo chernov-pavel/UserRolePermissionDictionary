@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/TestDB_2?currentSchema=test_scheme
+    username: postgres
+    password: 12345678
+    initialization-mode: always
+    continue-on-error: false
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: test_scheme
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    generate-ddl: false
+    open-in-view: false
+    show-sql: false
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-test.xml
+    default-schema: test_scheme
+    liquibase-schema: test_scheme
+
+logging:
+  level:
+    root: OFF

@@ -14,18 +14,21 @@ export class AppComponent implements OnInit {
     constructor(private router: Router) {
         this.tabs = [
             {
+                id: 'usertab',
                 index: 0,
-                label: 'Пользователи',
+                label: 'Users',
                 link: './users'
             },
             {
+                id: 'roletab',
                 index: 1,
-                label: 'Роли',
+                label: 'Roles',
                 link: './roles'
             },
             {
+                id: 'permissiontab',
                 index: 2,
-                label: 'Права',
+                label: 'Permissions',
                 link: './permissions'
             }
         ];
